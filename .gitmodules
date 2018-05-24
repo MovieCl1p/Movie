@@ -1,0 +1,6 @@
+[submodule "Assets/Script/Core"]
+	path = Assets/Script/Core
+	url = git@github.com:MovieCl1p/Core.git
+[submodule "Assets/MaterialUI"]
+	path = Assets/MaterialUI
+	url = git@github.com:MovieCl1p/MaterialUI.git
