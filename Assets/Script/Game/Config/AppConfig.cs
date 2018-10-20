@@ -1,4 +1,7 @@
 ﻿
+using Core.Binder;
+using Game.Services;
+
 namespace Game.Config
 {
     public class AppConfig
@@ -10,7 +13,8 @@ namespace Game.Config
 
         private void BindServices()
         {
-            
+            BindManager.Bind<INetworkService>().To<NetworkService>().ToSingleton();
+            BindManager.Bind<IQuizService>().To<QuizService>().ToSingleton();
         }
     }
 }

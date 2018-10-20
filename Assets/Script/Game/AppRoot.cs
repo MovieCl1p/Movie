@@ -1,4 +1,5 @@
-﻿using Game.Config;
+﻿using Game.Command;
+using Game.Config;
 using UnityEngine;
 
 namespace Game
@@ -8,6 +9,10 @@ namespace Game
         private void Awake()
         {
             AppConfig config = new AppConfig();
+            config.Init();
+            
+            StartCommand command = new StartCommand();
+            command.Execute();
         }
         
     }
