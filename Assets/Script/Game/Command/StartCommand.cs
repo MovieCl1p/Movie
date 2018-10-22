@@ -11,7 +11,6 @@ namespace Game.Command
     {
         public void Execute()
         {
-            ViewManager.Instance.Init();
             INetworkService network = BindManager.GetInstance<INetworkService>();
             network.Init();
 

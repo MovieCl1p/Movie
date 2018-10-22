@@ -4,17 +4,15 @@ using UnityEngine;
 
 namespace Game.Network
 {
-    public class PhotonManager : SingletonMonoBehaviour<PhotonManager>
+    public class PhotonManager : MonoSingleton<PhotonManager>
     {
         public event Action OnConnectToRoom;
         
         [SerializeField] 
         private Launcher _launcher;
 
-        public override void Awake()
+        private void Awake()
         {
-            base.Awake();
-
             _launcher.OnLauncherConnectRoom += OnLauncherConnectRoom;
         }
 
@@ -32,7 +30,7 @@ namespace Game.Network
             }
         }
 
-        private void OnDestroy()
+        protected override void OnReleaseResources()
         {
             _launcher.OnLauncherConnectRoom -= OnLauncherConnectRoom;
         }
