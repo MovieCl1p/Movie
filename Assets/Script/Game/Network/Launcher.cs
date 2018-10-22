@@ -33,18 +33,6 @@ namespace Game.Network
         {
             _isConnecting = true;
             
-            // we check if we are connected or not, we join if we are , else we initiate the connection to the server.
-            //if (PhotonNetwork.connected)
-            //{
-            //    // #Critical we need at this point to attempt joining a Random Room. If it fails, we'll get notified in OnPhotonRandomJoinFailed() and we'll create one.
-            //    PhotonNetwork.JoinRandomRoom();
-            //}
-            //else
-            //{
-            //    // #Critical, we must first and foremost connect to Photon Online Server.
-            //    PhotonNetwork.ConnectUsingSettings(_gameVersion);
-            //}
-
             if(PhotonNetwork.IsConnected)
             {
                 PhotonNetwork.JoinRandomRoom();
