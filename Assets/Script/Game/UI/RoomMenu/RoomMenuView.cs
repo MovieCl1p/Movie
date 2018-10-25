@@ -16,74 +16,34 @@ namespace Game.UI.RoomMenu
         [SerializeField] 
         private Text _text;
 
-        private int _secondsToStart = 3;
+        private INetworkService _network;
         
         protected override void Start()
         {
             base.Start();
-            
-            //PhotonNetwork.OnEventCall += OnEventCall;
 
-            //if (PhotonNetwork.isMasterClient)
-            //{
-            //    PhotonNetwork.room.MaxPlayers = 2;
-            //}
+            _network = BindManager.GetInstance<INetworkService>();
+            _network.OnCountDown += OnCountDown;
+            _network.OnStartGame += OnStartGame;
+
+            _network.OnJoinRoom();
         }
 
-        protected override void OnScheduledUpdate()
+        private void OnStartGame()
         {
-            //if (PhotonNetwork.isMasterClient)
-            //{
-            //    _secondsToStart--;
-
-            //    _countDownLabel.text = _secondsToStart.ToString();
-            //    PhotonNetwork.RaiseEvent(7, _secondsToStart, true, RaiseEventOptions.Default);
-
-            //    if (_secondsToStart <= 0)
-            //    {
-            //        StartGame();
-            //    }
-            //}
+            ViewManager.Instance.SetView(ViewNames.GameView);
         }
 
-        private void StartGame()
+        private void OnCountDown(int value)
         {
-            //UnscheduleUpdate();
-            //PhotonNetwork.RaiseEvent(8, _secondsToStart, true, RaiseEventOptions.Default);
-            //ViewManager.Instance.SetView(ViewNames.GameView);
+            _countDownLabel.text = value.ToString();
         }
 
-        private void OnPlayerConnected(int senderId)
+        protected override void OnReleaseResources()
         {
-            //Debug.Log("Player connected " + senderId);
-
-            //if (PhotonNetwork.isMasterClient && PhotonNetwork.room.playerCount == PhotonNetwork.room.MaxPlayers)
-            //{
-            //    ScheduleUpdate(1, true);
-            //}
-        }
-
-        private void OnEventCall(byte eventCode, object content, int senderId)
-        {
-            _text.text = string.Format("code: {0}; content: {1}; senderId: {2}", eventCode, content, senderId);
-
-            if (eventCode == 0)
-            {
-                OnPlayerConnected(senderId);
-                return;
-            }
-
-            if (eventCode == 7)
-            {
-                _countDownLabel.text = content.ToString();
-                return;
-            }
-
-            if (eventCode == 8)
-            {
-                ViewManager.Instance.SetView(ViewNames.GameView);
-                return;
-            }
+            _network.OnCountDown -= OnCountDown;
+            _network.OnStartGame -= OnStartGame;
+            base.OnReleaseResources();
         }
     }
 }

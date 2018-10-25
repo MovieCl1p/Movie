@@ -12,7 +12,6 @@ namespace Game.Network
 	    public event Action OnLauncherConnectRoom;
 	    public event Action OnLauncherDisconnectRoom;
 	    
-        //Need to be in global settings
         private string _gameVersion = "1";
         
         private bool _isConnecting = true;
@@ -20,12 +19,6 @@ namespace Game.Network
 
 	    private void Awake()
         {
-            // #Critical
-            // we don't join the lobby. There is no need to join a lobby to get the list of rooms.
-            //PhotonNetwork.autoJoinLobby = false;
-
-            // #Critical
-            // this makes sure we can use PhotonNetwork.LoadLevel() on the master client and all clients in the same room sync their level automatically
             PhotonNetwork.AutomaticallySyncScene = true;
         }
         
@@ -42,7 +35,11 @@ namespace Game.Network
                 PhotonNetwork.GameVersion = _gameVersion;
                 PhotonNetwork.ConnectUsingSettings();
             }
+        }
 
+        public void Disconnect()
+        {
+            PhotonNetwork.Disconnect();
         }
         
         public override void OnConnectedToMaster()
@@ -78,13 +75,6 @@ namespace Game.Network
 		public override void OnJoinedRoom()
         {
             Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.\nFrom here on, your game would be running.");
-
-            if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
-			{
-				// #Critical
-				// Load the Room Level. 
-				//PhotonNetwork.LoadLevel("PunBasics-Room for 1");
-			}
 
 			if (OnLauncherConnectRoom != null)
 			{

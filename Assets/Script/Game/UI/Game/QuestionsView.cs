@@ -8,7 +8,7 @@ namespace Game.UI.Game
 {
     public class QuestionsView : BaseMonoBehaviour
     {
-        public event Action OnPlayerAnswer;
+        public event Action<AnswerView> OnPlayerAnswer;
 
         [SerializeField]
         private Transform _content;
@@ -37,8 +37,13 @@ namespace Game.UI.Game
         {
             if(OnPlayerAnswer != null)
             {
-                OnPlayerAnswer();
+                OnPlayerAnswer(view);
             }
+        }
+
+        public void HighlightCorrectAnswer()
+        {
+
         }
 
         private void Clean()

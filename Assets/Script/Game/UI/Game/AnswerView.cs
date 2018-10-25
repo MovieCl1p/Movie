@@ -15,6 +15,16 @@ namespace Game.UI.Game
         [SerializeField]
         private Text _text;
 
+        private string _data;
+
+        public string Data
+        {
+            get
+            {
+                return _data;
+            }
+        }
+
         protected override void Start()
         {
             base.Start();
@@ -24,6 +34,7 @@ namespace Game.UI.Game
 
         public void Init(string answer)
         {
+            _data = answer;
             _text.text = answer;
         }
 

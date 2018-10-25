@@ -4,6 +4,7 @@ using Core.ViewManager;
 using Core.ViewManager.Data;
 using Game.Data;
 using Game.Services;
+using Game.Services.PlayerService;
 
 namespace Game.Command
 {
@@ -16,7 +17,10 @@ namespace Game.Command
 
             IQuizService quizService = BindManager.GetInstance<IQuizService>();
             quizService.Init();
-            
+
+            IPlayerService playerService = BindManager.GetInstance<IPlayerService>();
+            playerService.CreateUser();
+
             RegisterView();
             
             ViewManager.Instance.SetView(ViewNames.SplashView);

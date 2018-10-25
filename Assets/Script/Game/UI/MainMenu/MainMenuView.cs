@@ -1,10 +1,11 @@
-﻿using Core.Binder;
+﻿using System;
+using System.Collections;
+using Core.Binder;
 using Core.Commands;
 using Core.States;
 using Core.ViewManager;
 using Game.Data;
 using Game.Services;
-using Game.States;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,8 +16,13 @@ namespace Game.UI.MainMenu
         [SerializeField] 
         private Button _platBtn;
 
-        private StateMachine _stateMachine;
+        [SerializeField]
+        private ConnectionProgressView _progress;
+
+        private StateMachine _stateMachine; 
         private StateFlow _flow;
+
+        private INetworkService _network;
 
         public GameObject GameObject
         {
@@ -31,41 +37,55 @@ namespace Game.UI.MainMenu
             _flow.Next(previousState);
         }
 
-        private INetworkService _network;
-
         protected override void Start()
         {
             base.Start();
 
-            _stateMachine = new StateMachine(this);
-            _flow = new StateFlow(this, _stateMachine);
+            //_stateMachine = new StateMachine(this);
+            //_flow = new StateFlow(this, _stateMachine);
 
-            _flow.Add(new NextStatePair(typeof(MenuState), typeof(LobbyState)));
-            _flow.Add(new NextStatePair(typeof(LobbyState), typeof(GameState)));
+            //_flow.Add(new NextStatePair(typeof(MenuState), typeof(LobbyState)));
+            //_flow.Add(new NextStatePair(typeof(LobbyState), typeof(GameState)));
 
-            _stateMachine.ApplyState<MenuState>();
+            //_stateMachine.ApplyState<MenuState>();
 
             _platBtn.onClick.AddListener(OnPlayClick);
-            _network = BindManager.GetInstance<INetworkService>();
+            
         }
 
         private void OnPlayClick()
         {
+            _network = BindManager.GetInstance<INetworkService>();
             _network.OnConnectToRoom += OnConnectToRoom;
             _network.Connect();
+
+            HidePlayBtn();
+            ShowConnectionProgress(true);
+        }
+
+        private void ShowConnectionProgress(bool show)
+        {
+            _progress.gameObject.SetActive(show);
+            _progress.Activate(show);
+        }
+
+        private void HidePlayBtn()
+        {
+            _platBtn.gameObject.SetActive(false);
         }
 
         private void OnConnectToRoom()
         {
-            _network.OnConnectToRoom -= OnConnectToRoom;
+            ShowConnectionProgress(false);
 
+            _network.OnConnectToRoom -= OnConnectToRoom;
             ViewManager.Instance.SetView(ViewNames.RoomMenuView);
         }
 
         protected override void OnReleaseResources()
         {
-            _network.OnConnectToRoom -= OnConnectToRoom;
             _platBtn.onClick.RemoveListener(OnPlayClick);
+            _network.OnConnectToRoom -= OnConnectToRoom;
             base.OnReleaseResources();
         }
     }
