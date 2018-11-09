@@ -6,6 +6,8 @@ namespace Game.Services
     {
         QuizData GetQuiz();
 
+        QuizData GetMockQuiz();
+
         void Init();
     }
 }

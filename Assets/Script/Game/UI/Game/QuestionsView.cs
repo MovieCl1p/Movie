@@ -22,6 +22,11 @@ namespace Game.UI.Game
         {
             Clean();
 
+            if(data == null)
+            {
+                return;
+            }
+
             for (int i = 0; i < data.Answers.Length; i++)
             {
                 AnswerView view = Instantiate(_prefab, _content);

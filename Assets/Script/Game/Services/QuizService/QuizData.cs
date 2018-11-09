@@ -4,7 +4,7 @@ namespace Game.Services
 {
     public class QuizData
     {
-        private readonly int _id;
+        private readonly string _id;
         private readonly string _question;
         private readonly string[] _answers;
         private readonly int _answer;
@@ -13,7 +13,7 @@ namespace Game.Services
         { 
         }
 
-        public QuizData(int id, string question, string[] answers, int answer)
+        public QuizData(string id, string question, string[] answers, int answer)
         {
             _id = id;
             _question = question;

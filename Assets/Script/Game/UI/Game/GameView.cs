@@ -26,24 +26,34 @@ namespace Game.UI.Game
             _instanceService = BindManager.GetInstance<IInstanceService>();
             _instanceService.StartGame();
 
-            _questionView.OnPlayerAnswer += OnPlayerAnwer;
             _instanceService.OnFinishRound += OnFinishRaund;
+            _instanceService.OnStartRound += OnStartRaund;
+            _instanceService.OnFinishGame += OnFinishGame;
 
             ShowNextQuiz();
-
         }
-        
+
+        private void OnFinishGame()
+        {
+            ViewManager.Instance.SetView(ViewNames.MainMenu);
+        }
+
+        private void OnStartRaund()
+        {
+            ShowNextQuiz();
+        }
+
         private void OnFinishRaund()
         {
             _questionView.HighlightCorrectAnswer();
-
-            ViewManager.Instance.SetView(ViewNames.MainMenu);
+            _questionView.RefreshView(null);
         }
 
         private void ShowNextQuiz()
         {
-            IQuizService quizService = BindManager.GetInstance<IQuizService>();
-            QuizData data = quizService.GetQuiz();
+            _questionView.OnPlayerAnswer += OnPlayerAnwer;
+
+            QuizData data = _instanceService.GetNextQuiz();
 
             _questionView.RefreshView(data);
             _question.text = data.Question;
@@ -61,6 +71,8 @@ namespace Game.UI.Game
         {
             _questionView.OnPlayerAnswer -= OnPlayerAnwer;
             _instanceService.OnFinishRound -= OnFinishRaund;
+            _instanceService.OnStartRound -= OnStartRaund;
+            _instanceService.OnFinishGame -= OnFinishGame;
             base.OnReleaseResources();
         }
     }
