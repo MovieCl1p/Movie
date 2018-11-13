@@ -1,8 +1,10 @@
 ﻿using System;
 using Core.Binder;
+using Core.Dispatcher;
 using Core.ViewManager;
 using Game.Data;
 using Game.Services;
+using Game.Services.Network;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,17 +18,23 @@ namespace Game.UI.RoomMenu
         [SerializeField] 
         private Text _text;
 
+        [SerializeField]
+        private PlayerRoomView _playerPrefab;
+
+        [SerializeField]
+        private Transform _list;
+
         private INetworkService _network;
         
         protected override void Start()
         {
             base.Start();
 
-            _network = BindManager.GetInstance<INetworkService>();
-            _network.OnCountDown += OnCountDown;
-            _network.OnStartGame += OnStartGame;
+            //PlayerRoomView playerView = Instantiate(_playerPrefab, _list);
+            //playerView.UpdateView(player);
 
-            _network.OnJoinRoom();
+            IDispatcher dispatcher = BindManager.GetInstance<IDispatcher>();
+            dispatcher.AddListener(NetworkEventType.GoToGame, OnStartGame);
         }
 
         private void OnStartGame()
@@ -41,8 +49,8 @@ namespace Game.UI.RoomMenu
 
         protected override void OnReleaseResources()
         {
-            _network.OnCountDown -= OnCountDown;
-            _network.OnStartGame -= OnStartGame;
+            IDispatcher dispatcher = BindManager.GetInstance<IDispatcher>();
+            dispatcher.RemoveListener(NetworkEventType.GoToGame, OnStartGame);
             base.OnReleaseResources();
         }
     }
